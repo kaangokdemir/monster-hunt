@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Fight Club</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <link rel="stylesheet" href="css/foundation.min.css">
+    <link rel="stylesheet" href="css/app.css">
+</head>
+
+<body>
+    <div id="app">
+
+        <section class="row">
+            <div class="small-6 columns">
+                <img class="responsive-img" v-bind:class="{shaking: gameWon}" src="images/1.jpg">
+            </div>
+            <div class="small-6 columns">
+                <img class="responsive-img" v-bind:class="{shaking: gameRenew}" src="images/2.jpg">
+            </div>
+        </section>
+        <section class="row">
+            <div class="small-6 columns">
+                <h1 class="text-center">GONZALO</h1>
+                <div class="healthbar">
+                    <div :style="{width: playerHealth + '%'}"
+                        v-bind:class="{greened: myColor=='green', yellowed: myColor=='yellow', oranged: myColor=='orange', reded: myColor=='red',}"
+                        class="healthbar text-center" style=" margin: 0; color: white; ">
+                        {{playerHealth}}%
+                    </div>
+                </div>
+            </div>
+            <div class="small-6 columns">
+                <h1 class="text-center">BARKINGTON </h1>
+                <div class="healthbar">
+                    <div :style="{width: monsterHealth + '%'}"
+                        v-bind:class="{greened: hisColor=='green', yellowed: hisColor=='yellow', oranged: hisColor=='orange', reded: hisColor=='red',}"
+                        class="healthbar text-center" style="margin: 0; color: white;">
+                        {{monsterHealth}}%
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="row controls" v-if="!gameIsOn">
+            <div class="small-12 columns">
+                <button @click="startGame()" id="start-game" class="bttn">NEW GAME</button>
+            </div>
+        </section>
+        <section class="row controls" v-if="gameRenew">
+            <div class="small-12 columns">
+
+                <button class="renewButton" @click="renewGame()" id="renew-game">YOU LOST THE GAME</button>
+            </div>
+        </section>
+
+        <section class="row controls" v-if="gameWon">
+            <div class="small-12 columns">
+
+                <button class="renewButton" @click="renewGame()" id="renew-game">GRATZ! YOU KICKED THAT DOUCHE!</button>
+            </div>
+        </section>
+
+        <section v-if="gameIsOn && (!gameRenew && !gameWon)" class="row controls">
+            <div class="small-12 columns" id="buttons">
+                <button @click.prevent="playSound('https://kaangokdemir.me/monsterhunt/sounds/punch.mp3')" class="bttn" id="attack"
+                    @click="attack">PUNCH</button>
+                <button @click.prevent="playSound('https://kaangokdemir.me/monsterhunt/sounds/kick.mp3')" v-bind:class="{disabled: specialCounter>0}"
+                    class="bttn" id="special-attack" @click="specialAttack">
+                    <p v-if="specialCounter==0">KICK</p>
+                    <p v-show="specialCounter>0">WAIT: {{specialCounter}}</p>
+                </button>
+                <button @click.prevent="playSound('https://kaangokdemir.me/monsterhunt/sounds/heal.mp3')" class="bttn" id="heal" @click="healUp">HEAL
+                    UP</button>
+                <button class="bttn" id="give-up" @click="giveUp">FLEE</button>
+            </div>
+        </section>
+        <section class="row log" v-if="gameIsOn  && (!gameRenew && !gameWon) && logs.length>0">
+            <div class="small-12 columns" id="rows">
+                <ul>
+                    <li :class="{'playerTurn': log.turn=='YOU', 'monsterTurn': log.turn=='MONSTER'}"
+                        v-for="log in logs">
+                        {{log.text}}
+                    </li>
+
+                </ul>
+            </div>
+        </section>
+    </div>
+    <script src=app.js></script>
+</body>
+
+</html>
